@@ -1,0 +1,17 @@
+<package format="3">
+  <name>face_tracker_3000</name>
+  <version>0.0.1</version>
+  <description>Face Tracker 3000 ROS2 Python Package</description>
+
+  <maintainer email="your_email@example.com">Your Name</maintainer>
+  <license>Apache License 2.0</license>
+
+  <buildtool_depend>ament_python</buildtool_depend>
+
+  <!-- Dependencies for your package -->
+  <build_depend>rclpy</build_depend>
+  <exec_depend>rclpy</exec_depend>
+
+  <!-- Testing dependencies -->
+  <test_depend>pytest</test_depend>
+</package>
