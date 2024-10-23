@@ -20,7 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'talker = py_pubsub.publisher_member_function:main',
+            'face_offset = face_tracker_3000.face_offset:main',
             'listener = py_pubsub.subscriber_member_function:main',
         ],
     },
