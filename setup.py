@@ -21,7 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'face_offset = face_tracker_3000.face_offset:main',
-            'listener = py_pubsub.subscriber_member_function:main',
+            'aimbot = face_tracker_3000.aimbot:main',
         ],
     },
 )
