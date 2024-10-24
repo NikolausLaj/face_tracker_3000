@@ -5,20 +5,22 @@ from geometry_msgs.msg import Point
 
 import cv2
 
+# TODO: Add keyword argument, which alows to set BOOL value to display video stream.
+
 class FaceTracker(Node):
     def __init__(self):
         super().__init__('face_offset_node')
 
         self.face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
-        self.cap = cv2.VideoCapture(0)
+        self.cap = cv2.VideoCapture(2)
 
         self.image_center = (
             int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH) // 2),
             int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT) // 2)
             )
 
-        self.coord_pub = self.create_publisher(Point, 'offset', 10)
+        self.coord_pub = self.create_publisher(Point, 'face_offset', 10)
 
         if not self.cap.isOpened():
             self.get_logger().error("Unable to access the webcam")
@@ -33,8 +35,8 @@ class FaceTracker(Node):
             else:
                 self.get_logger().error("Failed to grab frame from webcam")
 
+            # just for visualization
             cv2.imshow('WebCam', frame)
-
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
@@ -52,7 +54,7 @@ class FaceTracker(Node):
 
             offset = Point(x=float(ex), y=float(ey), z=0.0)
 
-            # just for debugging
+            # just for visualization
             cv2.circle(frame, (fx, fy), 3, (0,255,0), -1)
             cv2.circle(frame, (self.image_center[0], self.image_center[1]), 3, (0,0,254), -1)
             cv2.line(frame, (fx, fy), (ex + fx, ey + fy), (255, 255, 255), 2)
