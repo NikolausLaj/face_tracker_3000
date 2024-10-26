@@ -1,0 +1,18 @@
+face_offset_node:
+  ros__parameters:
+    camera_input: 0  # 0 for built-in webcam, 2 for external webcam
+    face_detection:
+      scale_factor: 1.1
+      min_neighbors: 7
+    colors:
+      center_dot:
+        radius: 3
+        color: [0, 255, 255]
+        thickness: -1
+      face_dot:
+        radius: 3
+        color: [0, 0, 255]
+        thickness: -1
+      connection_line:
+        color: [255, 255, 255]
+        thickness: 2
