@@ -11,7 +11,8 @@ class AimBot(Node):
         self.subscription = self.create_subscription(Point, 'face_offset', self.listener_callback, 10)
 
     def listener_callback(self, msg):
-        self.get_logger().info(f"{msg.x}, {msg.y}")
+        # self.get_logger().info(f"{msg.x}, {msg.y}")
+        pass
 
 
 def main(args=None):
