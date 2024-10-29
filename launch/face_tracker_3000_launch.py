@@ -16,6 +16,5 @@ def generate_launch_description():
             executable='aimbot',
             name='aimbot_node',
             output='screen'
-            # parameters=['/ros-humble-dev-container/src/face_tracker_3000/face_tracker_3000/config/params.yaml']
         ),
     ])
