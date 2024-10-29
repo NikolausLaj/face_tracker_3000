@@ -10,9 +10,17 @@ face_offset_node:
       average_eye_distance: 0.063 # in [m]
 
     camera_parameters:
-      focal_length: 3.67 # in [mm]
-      sensor_width: 4.8 # in [mm]
-      sensor_height: 3.6 # in [mm]
+      sensor_dimensions:
+        focal_length: 3.67 # in [mm]
+        sensor_width: 4.8 # in [mm]
+        sensor_height: 3.6 # in [mm]
+      camera_matrix:
+        fx: 603.3565980559212 # in [pixel]
+        fy: 603.8525136324047 # in [pixel]
+        cx: 314.98325947311577 # in [pixel]
+        cy: 233.97939039940036 # in [pixel]
+      distortion_coefficients: # dimensionless
+        [0.07904876200503386, -0.2473724352661824, 1.4961220610951097e-05, 0.0024014898368810893, 0.2125031132173052]
 
     colors:
       center_dot:
