@@ -6,6 +6,7 @@ from geometry_msgs.msg import Point
 import cv2
 import math
 import numpy as np
+import serial
 
 # TODO: Add keyword argument, which alows to set BOOL value to display video stream.
 
@@ -90,6 +91,8 @@ class FaceTracker(Node):
 
         self.cap = cv2.VideoCapture(self.camera_input)
 
+        self.serial_port = serial.Serial('/dev/ttyUSB0', 115200, timeout=1)
+
         self.SENSOR_WIDTH_PIXEL = self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)
         self.SENSOR_HEIGTH_PIXEL = self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
 
@@ -164,6 +167,10 @@ class FaceTracker(Node):
             cv2.circle(frame, (self.image_center[0], self.image_center[1]), self.face_dot["radius"], self.face_dot["color"], self.face_dot["thickness"])
             cv2.line(frame, (fx, fy), (ex + fx, ey + fy), self.connection_line["color"], self.connection_line["thickness"])
             # self.get_logger().info(f"{offset.x}, {offset.y}")
+
+            angle = int(ex%180)
+            # self.serial_port.write(f"{angle}\n".encode())
+            self.get_logger().info(f'Sent angle: {ex%180} to Arduino')
 
 
     def cleanup(self):
