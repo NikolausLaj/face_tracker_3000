@@ -1,12 +1,12 @@
-import rclpy
-from rclpy.node import Node
-
-from geometry_msgs.msg import Point
-
 import cv2
 import math
 import numpy as np
 import serial
+import rclpy
+
+from rclpy.node import Node
+from geometry_msgs.msg import Point
+
 
 # TODO: Add keyword argument, which alows to set BOOL value to display video stream.
 
@@ -91,7 +91,7 @@ class FaceTracker(Node):
 
         self.cap = cv2.VideoCapture(self.camera_input)
 
-        self.serial_port = serial.Serial('/dev/ttyUSB0', 115200, timeout=1)
+        self.serial_port = serial.Serial('/dev/ttyUSB0', 115200)
 
         self.SENSOR_WIDTH_PIXEL = self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)
         self.SENSOR_HEIGTH_PIXEL = self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
@@ -108,7 +108,7 @@ class FaceTracker(Node):
         else:
             self.get_logger().info("Webcam successfully opened")
 
-    def spin(self):
+    def spin(self):        
         while rclpy.ok():
             ret, frame = self.cap.read()
             if ret:
@@ -116,8 +116,8 @@ class FaceTracker(Node):
             else:
                 self.get_logger().error("Failed to grab frame from webcam")
 
-            # just for visualization
-            cv2.imshow('WebCam', frame)
+            # For visualization
+            cv2.imshow('WebCam', cv2.flip(frame,1))
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
@@ -168,9 +168,10 @@ class FaceTracker(Node):
             cv2.line(frame, (fx, fy), (ex + fx, ey + fy), self.connection_line["color"], self.connection_line["thickness"])
             # self.get_logger().info(f"{offset.x}, {offset.y}")
 
-            angle = int(ex%180)
-            # self.serial_port.write(f"{angle}\n".encode())
+            self.serial_port.write(f"{ex%180}".encode())
             self.get_logger().info(f'Sent angle: {ex%180} to Arduino')
+            # response = self.serial_port.readline().decode().strip()  # Read response from Arduino
+            # self.get_logger().info(f'Resp angle: {response} from Arduino')
 
 
     def cleanup(self):
