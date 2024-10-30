@@ -1,11 +1,12 @@
 import cv2
 import math
 import numpy as np
-import serial
 import rclpy
+import serial
+import struct
 
-from rclpy.node import Node
 from geometry_msgs.msg import Point
+from rclpy.node import Node
 
 
 # TODO: Add keyword argument, which alows to set BOOL value to display video stream.
@@ -168,10 +169,14 @@ class FaceTracker(Node):
             cv2.line(frame, (fx, fy), (ex + fx, ey + fy), self.connection_line["color"], self.connection_line["thickness"])
             # self.get_logger().info(f"{offset.x}, {offset.y}")
 
-            self.serial_port.write(f"{ex%180}".encode())
-            self.get_logger().info(f'Sent angle: {ex%180} to Arduino')
+            
+            angle_XY = struct.pack('<HH', fx%180, fy%180)
+            self.get_logger().info(f'{fx%180}, {fy%180}')
+            self.serial_port.write(angle_XY)
+
+            # self.serial_port.write(f"{ex%180}, {ey%180}".encode())
+            # self.get_logger().info(f'Sent angle: {ex%180} to Arduino')
             # response = self.serial_port.readline().decode().strip()  # Read response from Arduino
-            # self.get_logger().info(f'Resp angle: {response} from Arduino')
 
 
     def cleanup(self):
