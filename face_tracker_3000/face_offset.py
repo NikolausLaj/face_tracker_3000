@@ -126,6 +126,13 @@ class FaceTracker(Node):
         dist_2_camera = (dist_eye_m * f_pixel) / dist_eye_pixel
         return dist_2_camera
 
+    def faceError2Angle(self, offset, servo_max, max_pixel):
+        d = servo_max // 2
+        k = d / ( max_pixel // 2 )
+        y = k * offset + d
+        return int(y)
+
+
     def frameCallback(self, frame):
         gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
@@ -169,10 +176,15 @@ class FaceTracker(Node):
             cv2.line(frame, (fx, fy), (ex + fx, ey + fy), self.connection_line["color"], self.connection_line["thickness"])
             # self.get_logger().info(f"{offset.x}, {offset.y}")
 
-            
-            angle_XY = struct.pack('<HH', fx%180, fy%180)
-            self.get_logger().info(f'{fx%180}, {fy%180}')
+            angle_x = self.faceError2Angle(ex, 180, self.SENSOR_WIDTH_PIXEL)
+            angle_y = self.faceError2Angle(ey, 180, self.SENSOR_HEIGTH_PIXEL)
+            angle_XY = struct.pack('<HH', angle_x, angle_y)
             self.serial_port.write(angle_XY)
+
+            self.get_logger().info(f'Send: {angle_x}, {angle_y}')
+
+            # response = self.serial_port.readline().decode().strip()  # Read response from Arduino
+            # print(response) 
 
             # self.serial_port.write(f"{ex%180}, {ey%180}".encode())
             # self.get_logger().info(f'Sent angle: {ex%180} to Arduino')
