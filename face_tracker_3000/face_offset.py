@@ -10,7 +10,7 @@ from cv_bridge import CvBridge
 
 from geometry_msgs.msg import Point
 from sensor_msgs.msg import Image, JointState
-from std_msgs.msg import Float32
+from std_msgs.msg import Float64
 
 # TODO: Change to this camera node https://index.ros.org/p/camera_ros/#humble-overview
 
@@ -35,7 +35,7 @@ class FaceTracker(Node):
 
         # Publischer
         # self.offset_pub = self.create_publisher( Point, 'face_offset', 10 )
-        self.dist_2_face_pub = self.create_publisher( Float32, 'dist_2_face', 10 )
+        self.dist_2_face_pub = self.create_publisher( Float64, 'dist_2_face', 10 )
         self.angle_2_face_pub = self.create_publisher( JointState, 'angle_2_face', 10 )
 
         # CvBridge
@@ -97,9 +97,6 @@ class FaceTracker(Node):
             ex = self.image_center[0] - fx
             ey = self.image_center[1] - fy
 
-            offset = Point(x=float(ex), y=float(ey), z=0.0)
-            # self.offset_pub.publish(offset)
-
             # Detect eyes
             roi_gray = frame[y:y + h, x:x + w]
             eyes = self.eye_cascade.detectMultiScale(roi_gray)
@@ -109,7 +106,7 @@ class FaceTracker(Node):
                 eye1, eye2 = eyes[:2]
                 eye_distance_pixels = int(math.sqrt((eye1[0] - eye2[0]) ** 2 + (eye1[1] - eye2[1]) ** 2))
                 dist_2_camera = self.D2C(self.AVR_EYE_DIST, eye_distance_pixels, self.camera_mat[0, 0])
-                self.dist_2_face_pub.publish(dist_2_camera) # TODO: somehow not publishing?!?
+                self.dist_2_face_pub.publish(Float64(data=float(dist_2_camera)))
 
             angle_x = self.faceError2Angle(ex, 180, self.SENSOR_WIDTH_PIXEL)
             angle_y = self.faceError2Angle(ey, 180, self.SENSOR_HEIGTH_PIXEL)
